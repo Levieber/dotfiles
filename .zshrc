@@ -26,9 +26,6 @@ export GPG_TTY=$(tty)
 [[ -f ~/.zsh/homebrew.zsh ]] && source ~/.zsh/homebrew.zsh
 $IS_WSL && [[ -f ~/.zsh/wsl2fix.zsh ]] && source ~/.zsh/wsl2fix.zsh
 
-# Load Mise
-[[ -f ~/.zsh/mise.zsh ]] && source ~/.zsh/mise.zsh
-
 # Load All Programs from /programs
 for file in ~/.zsh/programs/*; do
     source $file

@@ -52,6 +52,3 @@
 [color "status"]
   added = yellow
   changed = green
-
-[url "ssh://git@github.com/"]
-  insteadOf = https://github.com/
