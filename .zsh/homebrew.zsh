@@ -9,7 +9,7 @@ if $IS_MACOS; then
 else
     # Check if Linuxbrew is installed, if not, install it
     if [ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install.sh)"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
     # Add Linuxbrew to PATH
     eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
