@@ -3,8 +3,8 @@ bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
-bindkey '^[[A' history-substring-search-up # or '\eOA'
-bindkey '^[[B' history-substring-search-down # or '\eOB'
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
 
 # History
 HISTSIZE=1000
