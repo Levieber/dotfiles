@@ -1,0 +1,4 @@
+BREW_PREFIX=/home/linuxbrew/.linuxbrew
+
+eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+eval "$(mise activate zsh --shims)"

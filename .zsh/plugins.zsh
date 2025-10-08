@@ -7,4 +7,5 @@ zinit light Aloxaf/fzf-tab
 zinit load zsh-users/zsh-history-substring-search
 
 # Loads completions
-autoload -U compinit && compinit -C
+autoload -Uz compinit
+compinit -C

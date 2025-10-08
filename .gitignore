@@ -11,3 +11,11 @@
 
 .aider*
 .env
+
+## CONFIG
+
+.config/*
+!.config/mise
+!.config/nvim
+!.config/delta
+!.config/bat
