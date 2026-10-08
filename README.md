@@ -2,7 +2,7 @@
 
 My shell and editor setup for Linux, WSL2 and macOS: zsh with zinit, Starship, Neovim (LazyVim), mise, and a Catppuccin Mocha theme across the terminal tools.
 
-Based on [arthur404dev/dotfiles](https://github.com/arthur404dev/dotfiles).
+Based on an earlier version of dotfiles from [arthur404dev](https://github.com/arthur404dev).
 
 ## What's in it
 
