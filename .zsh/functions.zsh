@@ -379,3 +379,120 @@ ensure_package() {
   # Only install if the command doesn't exist
   install "${FLAGS[@]}" "$package_name" "$binary_name" "$package_manager"
 }
+
+# Merge a worktree's branch into the main checkout's current branch, then remove the worktree
+# and delete the branch. Run it from anywhere inside the repository.
+#   wtmerge                  pick the worktree with fzf
+#   wtmerge <name|branch>    e.g. `wtmerge tasks-cache-bots-perf` (a .claude/worktrees/<name>)
+#   wtmerge -k <name>        merge but keep the worktree and branch
+#   wtmerge -f <name>        also unlock a worktree a running session still holds
+wtmerge() {
+  local keep=false force=false
+  while [[ "$1" == -* ]]; do
+    case "$1" in
+    -h | --help)
+      echo "Usage: wtmerge [-k|--keep] [-f|--force] [WORKTREE_NAME|BRANCH]"
+      echo "Merge a worktree's branch into the main checkout, then remove the worktree and branch."
+      echo "  -k, --keep   merge only; keep the worktree and branch"
+      echo "  -f, --force  unlock the worktree even if the session that locked it is still running"
+      return 0
+      ;;
+    -k | --keep) keep=true ;;
+    -f | --force) force=true ;;
+    *)
+      echo "wtmerge: unknown option $1" >&2
+      return 1
+      ;;
+    esac
+    shift
+  done
+
+  local main
+  main=$(git worktree list --porcelain 2>/dev/null | awk 'NR == 1 { print $2 }')
+  if [[ -z "$main" ]]; then
+    echo "wtmerge: not inside a git repository" >&2
+    return 1
+  fi
+
+  # Every worktree except the main checkout, as "<path> <branch>".
+  local worktrees
+  worktrees=$(git -C "$main" worktree list --porcelain | awk -v main="$main" '
+    /^worktree / { path = substr($0, 10) }
+    /^branch /   { if (path != main) print path, substr($0, 19) }
+  ')
+  if [[ -z "$worktrees" ]]; then
+    echo "wtmerge: no worktrees besides $main" >&2
+    return 1
+  fi
+
+  local selected
+  if [[ -n "$1" ]]; then
+    selected=$(print -r -- "$worktrees" | awk -v want="$1" '
+      { n = split($1, parts, "/") } parts[n] == want || $2 == want || $2 == "worktree-" want
+    ')
+  else
+    selected=$(print -r -- "$worktrees" | fzf --height=40% --reverse --prompt="merge worktree> " \
+      --preview 'git -C {1} log --oneline --color=always -20 HEAD --not '"$(git -C "$main" branch --show-current)")
+  fi
+  if [[ -z "$selected" || $(print -r -- "$selected" | wc -l) -ne 1 ]]; then
+    echo "wtmerge: no single worktree matches '${1:-}'" >&2
+    return 1
+  fi
+
+  local wt_path=${selected%% *} branch=${selected##* }
+  local target
+  target=$(git -C "$main" branch --show-current)
+
+  if [[ -n $(git -C "$wt_path" status --porcelain) ]]; then
+    echo "wtmerge: $wt_path has uncommitted changes; commit or discard them first" >&2
+    return 1
+  fi
+  if [[ -n $(git -C "$main" status --porcelain --untracked-files=no) ]]; then
+    echo "wtmerge: $main has uncommitted changes on $target" >&2
+    return 1
+  fi
+
+  # A locked worktree can't be removed. Claude Code locks the ones it creates while its session
+  # runs, with the reason "claude session <name> (pid <pid> start <starttime>)". The start time
+  # (field 22 of /proc/<pid>/stat) tells a live session from a reused pid.
+  local lock
+  lock=$(git -C "$main" worktree list --porcelain | awk -v wt="$wt_path" '
+    /^worktree / { path = substr($0, 10) }
+    /^locked/    { if (path == wt) print (length($0) > 7 ? substr($0, 8) : "(no reason)") }
+  ')
+  if [[ -n "$lock" && "$keep" == false ]]; then
+    local pid start live=false
+    pid=$(print -r -- "$lock" | sed -nE 's/.*\(pid ([0-9]+) start ([0-9]+)\).*/\1/p')
+    start=$(print -r -- "$lock" | sed -nE 's/.*\(pid ([0-9]+) start ([0-9]+)\).*/\2/p')
+    if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null &&
+      [[ -z "$start" || ! -r /proc/$pid/stat || $(awk '{ print $22 }' /proc/$pid/stat) == "$start" ]]; then
+      live=true
+    fi
+    if [[ "$live" == true && "$force" == false ]]; then
+      echo "wtmerge: $wt_path is locked by a running session: $lock" >&2
+      echo "  Exit that session (pid $pid) first, or rerun with -f to unlock it anyway." >&2
+      return 1
+    fi
+    [[ "$live" == true ]] && echo "Unlocking $wt_path (held by running pid $pid)." ||
+      echo "Unlocking $wt_path (stale lock: $lock)."
+    git -C "$main" worktree unlock "$wt_path" || return 1
+  fi
+
+  echo "Merging $branch into $target:"
+  git -C "$main" log --oneline "$target..$branch"
+  git -C "$main" merge --ff-only "$branch" 2>/dev/null || git -C "$main" merge --no-edit "$branch" || {
+    echo "wtmerge: merge failed; resolve it in $main (the worktree was kept)" >&2
+    return 1
+  }
+
+  if [[ "$keep" == true ]]; then
+    echo "Merged; kept $wt_path and $branch."
+    return 0
+  fi
+
+  # Don't leave the shell in a directory that's about to disappear.
+  [[ "$PWD" == "$wt_path" || "$PWD" == "$wt_path"/* ]] && cd "$main"
+  # Ignored files (node_modules, build output) don't block the removal; untracked ones do.
+  git -C "$main" worktree remove "$wt_path" && git -C "$main" branch -d "$branch" &&
+    echo "Merged $branch into $target, removed $wt_path and deleted the branch."
+}
