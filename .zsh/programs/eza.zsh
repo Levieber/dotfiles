@@ -1,7 +1,7 @@
 ensure_package eza -s
 
 # Define base commands
-base_command="eza --icons"
+base_command="eza --icons auto"
 base_command_no_icons="eza"
 
 # Default directory listing aliases with icons
