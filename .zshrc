@@ -2,6 +2,7 @@
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export GPG_TTY=$(tty)
+export HISTORY_IGNORE='(export AWS_*|AWS_*=*)'
 
 # Load Package Manager (zinit)
 [[ -f ~/.zsh/zinit.zsh ]] && source ~/.zsh/zinit.zsh
@@ -30,3 +31,6 @@ $IS_WSL && [[ -f ~/.zsh/wsl2fix.zsh ]] && source ~/.zsh/wsl2fix.zsh
 for file in ~/.zsh/programs/*; do
     source $file
 done
+
+# libpq is keg-only in Homebrew, so psql and friends aren't on PATH by default
+[[ -d "$BREW_PREFIX/opt/libpq/bin" ]] && export PATH="$BREW_PREFIX/opt/libpq/bin:$PATH"
