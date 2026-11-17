@@ -1,0 +1,5 @@
+# Desktop machines only (not WSL or containers). Select it once with:
+#   mise -E desktop bootstrap --save-env
+
+[dotfiles]
+"~/.config/ghostty/config.ghostty" = {}

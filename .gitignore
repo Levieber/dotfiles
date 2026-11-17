@@ -19,3 +19,9 @@
 !.config/nvim
 !.config/delta
 !.config/bat
+!.config/git
+!.config/ghostty
+!.config/k9s
+!.config/gh
+# gh keeps its auth tokens here; never commit it
+.config/gh/hosts.yml

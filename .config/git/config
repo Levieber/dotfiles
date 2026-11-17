@@ -1,25 +1,33 @@
+# Shared git config, linked to ~/.config/git/config.
+# Name and email live in the untracked ~/.gitconfig, which git reads after
+# this file, so `git config --global` writes there and never into the repo.
+
+# Commits and tags are signed with the SSH key that's also on GitHub
 [user]
-	# Update and uncomment the following lines
-  #	email = {public GitHub email}
-  #	name = {GitHub username}
-  #	signingkey = {GPG signing key for use with GitHub}
+  signingkey = ~/.ssh/id_rsa.pub
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  allowedSignersFile = ~/.config/git/allowed_signers
 
 [commit]
-	gpgsign = true
+  gpgsign = true
 
 [tag]
-	gpgsign = true
+  gpgsign = true
 
 [push]
-	followTags = true
+  followTags = true
   default = current
   autoSetupRemote = true
 
 [init]
-	defaultBranch = main
+  defaultBranch = main
 
 [core]
-  editor = code
+  editor = nvim
   pager = delta
 
 [interactive]
