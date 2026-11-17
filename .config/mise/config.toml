@@ -1,8 +1,32 @@
 [tools]
+# Languages and package managers
 bun = "latest"
 node = "lts"
 pnpm = "latest"
 python = "latest"
+uv = "latest"
+
+# CLI tools (were Homebrew formulae)
+awscli = "latest"
+bat = "latest"
+delta = "latest"
+eza = "latest"
+fzf = "latest"
+gh = "latest"
+hyperfine = "latest"
+just = "latest"
+k9s = "latest"
+kubectl = "latest"
+lazydocker = "latest"
+neovim = "latest"
+railway = "latest"
+ripgrep = "latest"
+starship = "latest"
+zoxide = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node", "python"]
+# The repo lives in ~/dotfiles, not mise's default ~/.dotfiles
+dotfiles.root = "~/dotfiles"
+# Links point into the repo with relative paths (~/.zshrc -> dotfiles/.zshrc)
+dotfiles.relative_symlinks = true

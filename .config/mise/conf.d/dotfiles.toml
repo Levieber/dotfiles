@@ -1,0 +1,19 @@
+# Files linked from the repo into $HOME. An entry without `source` links the
+# same path under `dotfiles.root` (~/dotfiles). Whole directories are linked,
+# so new files inside them need no new entry.
+[dotfiles]
+"~/.zshrc" = {}
+"~/.zsh" = {}
+"~/.editorconfig" = {}
+"~/.config/mise" = {}
+"~/.config/nvim" = {}
+"~/.config/bat" = {}
+"~/.config/delta" = {}
+"~/.config/starship.toml" = {}
+# Single files: these apps keep state next to their config
+"~/.config/git/config" = {}
+"~/.config/git/ignore" = {}
+"~/.config/git/allowed_signers" = {}
+"~/.config/k9s/config.yaml" = {}
+"~/.config/k9s/aliases.yaml" = {}
+"~/.config/gh/config.yml" = {}

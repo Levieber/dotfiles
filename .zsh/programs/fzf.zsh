@@ -1,5 +1,4 @@
-# If fzf is not installed, install it
-ensure_package fzf -s
+(( $+commands[fzf] )) || return 0
 
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \

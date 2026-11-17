@@ -6,6 +6,10 @@
 # Load Helpers
 [[ -f ~/.zsh/helpers.zsh ]] && source ~/.zsh/helpers.zsh
 
+# Put Homebrew (macOS only) and the mise tools on PATH before anything uses them
+$IS_MACOS && [[ -f ~/.zsh/homebrew.zsh ]] && source ~/.zsh/homebrew.zsh
+[[ -f ~/.zsh/mise.zsh ]] && source ~/.zsh/mise.zsh
+
 # Load Functions, Aliases and Config
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
@@ -19,8 +23,7 @@
 # Starship Configuration
 [[ -f ~/.zsh/starship.zsh ]] && source ~/.zsh/starship.zsh
 
-# Load Homebrew and fix WSL2 interop
-[[ -f ~/.zsh/homebrew.zsh ]] && source ~/.zsh/homebrew.zsh
+# Fix WSL2 interop
 $IS_WSL && [[ -f ~/.zsh/wsl2fix.zsh ]] && source ~/.zsh/wsl2fix.zsh
 
 # Load All Programs from /programs

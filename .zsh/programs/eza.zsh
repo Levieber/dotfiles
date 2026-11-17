@@ -1,4 +1,5 @@
-ensure_package eza -s
+# Without eza (before `mise install`), keep the system ls
+(( $+commands[eza] )) || return 0
 
 # Define base commands
 base_command="eza --icons auto"

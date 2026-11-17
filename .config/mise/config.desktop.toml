@@ -1,0 +1,54 @@
+# Desktop machines only (not WSL or containers): GUI apps and their configs.
+# Select it once with:
+#   mise -E desktop bootstrap --save-env
+
+[dotfiles]
+"~/.config/ghostty/config.ghostty" = {}
+
+# ── apt repositories (see conf.d/packages.toml about duplicate sources) ────────
+[bootstrap.apt.sources.ghostty]
+ppa = "mkasberg/ghostty-ubuntu"
+
+[bootstrap.apt.sources.vscode]
+uris = "https://packages.microsoft.com/repos/code"
+suites = "stable"
+components = "main"
+architectures = "amd64"
+key = "https://packages.microsoft.com/keys/microsoft.asc"
+fingerprint = "BC52 8686 B50D 79E3 39D3 721C EB3E 94AD BE12 29CF"
+
+# Chrome's own install script adds google-chrome.sources next to mise's file unless this
+# says not to, and apt fails on the duplicate. Written before the packages are installed.
+[bootstrap.files."/etc/default/google-chrome"]
+phase = "pre-packages"
+mode = "0644"
+content = """
+repo_add_once="false"
+repo_reenable_on_distupgrade="false"
+"""
+
+[bootstrap.apt.sources.google-chrome]
+uris = "https://dl.google.com/linux/chrome-stable/deb/"
+suites = "stable"
+components = "main"
+architectures = "amd64"
+key = "https://dl.google.com/linux/linux_signing_key.pub"
+fingerprint = "EB4C 1BFD 4F04 2F6D DDCC EC91 7721 F63B D38B 4796"
+
+# ── packages ───────────────────────────────────────────────────────────────────
+[bootstrap.packages]
+"apt:ghostty" = "latest"
+"apt:code" = "latest"
+"apt:google-chrome-stable" = "latest"
+"snap:discord" = "latest"
+"snap:firefox" = "latest"
+"snap:libreoffice" = "latest"
+"snap:postman" = "latest"
+"snap:proton-vpn" = "latest"
+"snap:spotify" = "latest"
+"snap:steam" = "latest"
+
+# ── hooks (they run on every `mise bootstrap`, so each one is idempotent) ─────
+[bootstrap.hooks.post-packages]
+description = "Install Proton Pass (.deb, no repo) the first time; updates stay manual"
+run = "dpkg -s proton-pass >/dev/null 2>&1 || ~/dotfiles/scripts/install-proton-pass.sh"
