@@ -1,0 +1,8 @@
+#!/bin/sh
+# Open URLs from WSL in the Windows default browser (used as $BROWSER).
+# explorer.exe exits 1 even when it opened the URL, so gh/claude report a
+# failed login; always exit 0 instead. wslu isn't packaged in Ubuntu 26.04.
+for url in "$@"; do
+  /mnt/c/Windows/explorer.exe "$url"
+done
+exit 0

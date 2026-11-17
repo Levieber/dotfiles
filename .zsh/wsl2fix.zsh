@@ -22,3 +22,10 @@ export PATH="$PATH:/mnt/c/Program Files/Docker/Docker/resources/bin"
 export PATH="$PATH:/mnt/c/ProgramData/DockerDesktop/version-bin"
 export PATH="$PATH:/mnt/c/WINDOWS"
 export PATH="$PATH:/mnt/c/WINDOWS/System32"
+export PATH="$PATH:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0"
+
+### Session services that a desktop gets from GNOME
+# ssh-agent: OpenSSH's systemd user socket (`systemctl --user enable --now ssh-agent.socket`)
+[[ -z "$SSH_AUTH_SOCK" && -S "$XDG_RUNTIME_DIR/openssh_agent" ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/openssh_agent"
+# Open URLs (gh/claude logins) in the Windows default browser (wrapper: explorer.exe exits 1 on success)
+export BROWSER="$HOME/.zsh/bin/win-browser"
