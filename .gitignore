@@ -25,3 +25,5 @@
 !.config/gh
 # gh keeps its auth tokens here; never commit it
 .config/gh/hosts.yml
+# Per-machine mise settings, e.g. the environments `mise bootstrap --save-env` selects
+.config/mise/*.local.toml

@@ -1,0 +1,56 @@
+# System packages for every machine (Linux desktop, WSL2, macOS). Entries for a
+# package manager the machine doesn't have (apt on macOS, brew on Linux) are skipped.
+# Desktop-only apps are in ../config.desktop.toml.
+
+[bootstrap.user]
+login_shell = "zsh"
+
+# ── apt repositories ───────────────────────────────────────────────────────────
+# mise writes each one to /etc/apt/sources.list.d/mise-<name>.sources with its key
+# inline. Don't keep a second file for the same repository: apt refuses two entries
+# with different Signed-By values. Repos that publish only amd64 say so, because
+# apt otherwise asks them for i386 too (enabled for Steam's 32-bit libraries).
+
+# mise itself, so it updates with the system (https://mise.jdx.dev/installing-mise.html)
+[bootstrap.apt.sources.mise]
+ppa = "jdxcode/mise"
+
+# Claude Code, `latest` channel (https://code.claude.com/docs/en/setup#install-with-linux-package-managers)
+[bootstrap.apt.sources.claude-code]
+uris = "https://downloads.claude.ai/claude-code/apt/latest"
+suites = "latest"
+components = "main"
+architectures = "amd64"
+key = "https://downloads.claude.ai/keys/claude-code.asc"
+fingerprint = "31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE"
+
+# Docker Engine; the rootless setup is a one-time manual step (see the README)
+[bootstrap.apt.sources.docker]
+uris = "https://download.docker.com/linux/ubuntu"
+components = "stable"
+architectures = "amd64"
+key = "https://download.docker.com/linux/ubuntu/gpg"
+fingerprint = "9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88"
+
+# ── packages ───────────────────────────────────────────────────────────────────
+[bootstrap.packages]
+"apt:git" = "latest"
+"apt:zsh" = "latest"
+"apt:curl" = "latest"
+"apt:build-essential" = "latest"
+"apt:postgresql-client" = "latest"
+"apt:mise" = "latest"
+"apt:claude-code" = "latest"
+"apt:docker-ce" = "latest"
+"apt:docker-ce-cli" = "latest"
+"apt:containerd.io" = "latest"
+"apt:docker-buildx-plugin" = "latest"
+"apt:docker-compose-plugin" = "latest"
+"apt:docker-ce-rootless-extras" = "latest"
+"apt:uidmap" = "latest"
+"apt:slirp4netns" = "latest"
+
+# macOS: Homebrew is installed by hand first (https://brew.sh)
+"brew:mise" = { os = "macos" }
+"brew:libpq" = { os = "macos" }
+"brew-cask:claude-code@latest" = { os = "macos" }
