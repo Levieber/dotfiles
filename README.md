@@ -90,8 +90,8 @@ The shared settings come from `~/.config/git/config`. Your identity stays out of
   email = you@example.com
 ```
 
-- Commits and tags are signed with SSH (`gpg.format = ssh`), using `~/.ssh/id_rsa.pub`. Upload that key to GitHub as a **signing** key too, or point `user.signingkey` at another key in `~/.gitconfig`.
-- `~/.config/git/allowed_signers` lists the keys `git log --show-signature` trusts.
+- Commits and tags are signed with SSH (`gpg.format = ssh`), using `~/.ssh/id_ed25519.pub`. Upload that key to GitHub as a **signing** key too, or point `user.signingkey` at another key in `~/.gitconfig`.
+- `~/.config/git/allowed_signers` lists the keys `git log --show-signature` trusts. After a key rotation, keep the old key's line so older commits still verify locally.
 
 ### 4. Docker (rootless)
 
