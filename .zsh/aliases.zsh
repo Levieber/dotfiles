@@ -21,8 +21,9 @@ alias myip="curl http://ipecho.net/plain; echo"
 $IS_WSL && alias explorer="/mnt/c/Windows/explorer.exe"
 
 # Docker Aliases
-if_exists docker && alias drai="docker rmi $(docker images -a -q)"
-if_exists docker && alias drac="docker rm $(docker ps -a -q)"
+# Single quotes: list the images/containers when the alias runs, not at shell startup
+if_exists docker && alias drai='docker rmi $(docker images -a -q)'
+if_exists docker && alias drac='docker rm $(docker ps -a -q)'
 
 alias c="code"
 

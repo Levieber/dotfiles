@@ -1,6 +1,5 @@
-if [ ! -f /usr/local/bin/starship ]; then
-    curl -sS https://starship.rs/install.sh | sh -s -- -y
-fi
+# Starship is installed by mise (.config/mise/config.toml)
+(( $+commands[starship] )) || return 0
 
 # find out which distribution we are running on
 LFILE="*-release"
@@ -62,5 +61,5 @@ export STARSHIP_DEVICE="$DEVICE"
 # Fixes: https://github.com/starship/starship/issues/3418
 type starship_zle-keymap-select >/dev/null ||
     {
-        eval "$(/usr/local/bin/starship init zsh)"
+        eval "$(starship init zsh)"
     }

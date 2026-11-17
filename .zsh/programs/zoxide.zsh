@@ -1,5 +1,4 @@
-# If zoxide is not installed, install it
-ensure_package zoxide -s
+(( $+commands[zoxide] )) || return 0
 
 alias cd="z"
 
