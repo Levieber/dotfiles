@@ -1,10 +1,8 @@
 [tools]
 bun = "latest"
-java = "latest"
 node = "lts"
 pnpm = "latest"
 python = "latest"
-yarn = "1.22.22"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node", "python"]
