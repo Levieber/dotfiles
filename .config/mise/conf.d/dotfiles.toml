@@ -1,0 +1,12 @@
+# Files linked from the repo into $HOME. An entry without `source` links the
+# same path under `dotfiles.root` (~/dotfiles). Whole directories are linked,
+# so new files inside them need no new entry.
+[dotfiles]
+"~/.zshrc" = {}
+"~/.zsh" = {}
+"~/.editorconfig" = {}
+"~/.config/mise" = {}
+"~/.config/nvim" = {}
+"~/.config/bat" = {}
+"~/.config/delta" = {}
+"~/.config/starship.toml" = {}
